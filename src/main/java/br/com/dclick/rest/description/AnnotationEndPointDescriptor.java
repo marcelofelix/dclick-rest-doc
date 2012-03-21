@@ -3,10 +3,10 @@ package br.com.dclick.rest.description;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -23,6 +23,8 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.util.UrlPathHelper;
 
+import br.com.dclick.rest.description.annotations.Errors;
+
 /**
  * Essa classe faz a identificação de EndPoint utilizando as annotations do
  * spring
@@ -38,7 +40,7 @@ public class AnnotationEndPointDescriptor implements EndPointDescriptor {
 	private ParamDescriptor parameterFactory;
 
 	@Autowired
-	private MessageSource messageSource;
+	private DocumentResolver documentResolver;
 
 	@Override
 	public Collection<EndPoint> describe(final Class<?> controller) {
@@ -50,24 +52,33 @@ public class AnnotationEndPointDescriptor implements EndPointDescriptor {
 				}
 			});
 			for (Method m : methods) {
-				DocumentResolver documentResolver = new ComposedDocumentResolver(messageSource, m);
 				RequestMappingInfo info = getMappingForMethod(m, controller);
-				
-				EndPoint endPoint = new EndPoint();
+
+				EndPoint endPoint = new EndPoint(m);
 				endPoint.addUrl(info.getPatternsCondition().getPatterns());
 				endPoint.addMethod(info.getMethodsCondition().getMethods());
 				endPoint.addParam(parameterFactory.getParams(m));
-				endPoint.setDescriptions(documentResolver.getDescription());
-				endPoint.setGroup(documentResolver.getGroup());
-				endPoint.setLabel(documentResolver.getLabel());
-				for (Param p : endPoint.getParams()) {
-					p.setDescription(documentResolver.getParameterDescription(p.getName()));
-					p.setValues(documentResolver.getParameterValues(p.getName()));
-				}
+				endPoint.addErrors(getErrors(m));
+				documentResolver.document(endPoint);
 				descriptions.add(endPoint);
 			}
 		}
 		return descriptions;
+	}
+
+	/**
+	 * @param method
+	 * @return EndPoint's errors
+	 */
+	public List<EndPointError> getErrors(final Method method) {
+		List<EndPointError> endPointErrors = new ArrayList<EndPointError>();
+		Errors errors = AnnotationUtils.findAnnotation(method, Errors.class);
+		if (errors != null) {
+			for (Class<? extends Exception> ex : errors.value()) {
+				endPointErrors.add(new EndPointError(ex));
+			}
+		}
+		return endPointErrors;
 	}
 
 	/**

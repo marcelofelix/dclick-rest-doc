@@ -10,29 +10,13 @@ import java.lang.annotation.Target;
  * @author marcelofelix
  * 
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface EndPointDescription {
+public @interface EndPointCode {
 
 	/**
-	 * EndPoint's description
+	 * code
 	 */
-	String description() default "";
-
-	/**
-	 * label
-	 */
-	String label() default "";
-
-	/**
-	 * group
-	 */
-	String group() default "";
-
-	/**
-	 * Parameter's description
-	 */
-	EndPointParam[] params() default {};
-
+	String value() default "";
 }

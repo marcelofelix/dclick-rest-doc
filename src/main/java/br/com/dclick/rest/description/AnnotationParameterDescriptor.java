@@ -10,14 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import br.com.dclick.rest.description.annotations.EndPointDescription;
-import br.com.dclick.rest.description.annotations.EndPointParam;
 
 /**
  * Identifica os parametros dos EndPoints olhando as annotations existentes
@@ -37,26 +33,7 @@ public class AnnotationParameterDescriptor implements ParamDescriptor {
 		parameters.addAll(getRequestParam(method));
 		parameters.addAll(getPathVariable(method));
 		parameters.addAll(getModelAtribute(method));
-		readParameterDescription(parameters, method);
 		return parameters;
-	}
-
-	/**
-	 * @param method
-	 */
-	private void readParameterDescription(final List<Param> parameters, final Method method) {
-		EndPointDescription description = AnnotationUtils.findAnnotation(method, EndPointDescription.class);
-		if (description != null) {
-			for (EndPointParam pd : description.params()) {
-				for (Param p : parameters) {
-					if (p.getName().equals(pd.name())) {
-						p.setDescription(pd.description());
-						p.setValues(asList(pd.values()));
-					}
-				}
-
-			}
-		}
 	}
 
 	/**

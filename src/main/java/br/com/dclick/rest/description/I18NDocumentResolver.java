@@ -1,15 +1,12 @@
 package br.com.dclick.rest.description;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.core.annotation.AnnotationUtils;
-
-import br.com.dclick.rest.description.annotations.EndPointDescription;
-import br.com.dclick.rest.description.annotations.EndPointParam;
+import org.springframework.stereotype.Component;
 
 /**
  * 
@@ -36,52 +33,69 @@ import br.com.dclick.rest.description.annotations.EndPointParam;
  * @author marcelofelix
  * 
  */
+@Component
 public class I18NDocumentResolver implements DocumentResolver {
 
-	private final MessageSource message;
-	private final Method method;
+	@Autowired
+	private MessageSource message;
+
+	@Override
+	public void document(final EndPoint endPoint) {
+		endPoint.setDescriptions(getDescription(endPoint));
+		endPoint.setGroup(getGroup(endPoint));
+		endPoint.setLabel(getLabel(endPoint));
+		for (Param p : endPoint.getParams()) {
+			p.setDescription(getParameterDescription(endPoint, p.getName()));
+			p.setValues(getParameterValues(endPoint, p.getName()));
+		}
+		for (EndPointError e : endPoint.getErrors()) {
+			e.setLabel(getErrorLabel(endPoint, e.getError()));
+			e.setDescription(getErrorDescription(endPoint, e.getError()));
+		}
+	}
 
 	/**
-	 * @param message
-	 * @param method
+	 * @return description
 	 */
-	public I18NDocumentResolver(final MessageSource message, final Method method) {
-		super();
-		this.message = message;
-		this.method = method;
+	private String getDescription(final EndPoint endPoint) {
+		return getMessage(getDescriptionCode(endPoint));
 	}
 
-	@Override
-	public String getDescription() {
-		return getMessage(getDescriptionCode());
+	/**
+	 * @return group
+	 */
+	private String getGroup(final EndPoint endPoint) {
+		return getMessage(getGroupCode(endPoint), endPoint.getDeclaringClass().getSimpleName());
 	}
 
-	@Override
-	public String getGroup() {
-		return getMessage(getGroupCode());
+	/**
+	 * @return label
+	 */
+	private String getLabel(final EndPoint endPoint) {
+		return getMessage(getLabelCode(endPoint), endPoint.getMethod().getName());
 	}
 
-	@Override
-	public String getLabel() {
-		return getMessage(getLabelCode());
+	/**
+	 * @param parameterName
+	 * @return parameter description
+	 */
+	private String getParameterDescription(final EndPoint endPoint, final String parameterName) {
+		return getMessage(getDescriptionCode(endPoint) + ".$parameter." + parameterName);
 	}
 
-	@Override
-	public String getParameterDescription(final String parameterName) {
-		return getMessage(getDescriptionCode() + ".parameter." + parameterName);
-	}
-
-	@Override
-	public List<String> getParameterValues(final String parameterName) {
-		EndPointDescription annotation = AnnotationUtils.findAnnotation(method, EndPointDescription.class);
-		if (annotation != null) {
-			for (EndPointParam p : annotation.params()) {
-				if (p.name().equals(parameterName)) {
-					return Arrays.asList(p.values());
-				}
+	/**
+	 * @param parameterName
+	 * @return parameter values
+	 */
+	private List<String> getParameterValues(final EndPoint endPoint, final String parameterName) {
+		String value = getMessage(getDescriptionCode(endPoint) + ".$parameter." + parameterName + ".value");
+		List<String> values = new ArrayList<String>();
+		if (!value.trim().isEmpty()) {
+			for (String v : value.split(",")) {
+				values.add(v.trim());
 			}
 		}
-		return null;
+		return values;
 	}
 
 	/**
@@ -93,30 +107,50 @@ public class I18NDocumentResolver implements DocumentResolver {
 	}
 
 	/**
-	 * @return código base para internacionalização
+	 * @param code
+	 * @param defaultMessage
+	 * @return Message
 	 */
-	private String getClassName() {
-		return this.method.getDeclaringClass().getName();
+	private String getMessage(final String code, final String defaultMessage) {
+		return this.message.getMessage(code, new Object[] {}, defaultMessage, Locale.getDefault());
 	}
 
 	/**
 	 * @return código para a descrição do EndPoint
 	 */
-	private String getDescriptionCode() {
-		return getClassName() + "." + method.getName();
+	private String getDescriptionCode(final EndPoint endPoint) {
+		return endPoint.getCode();
 	}
 
 	/**
 	 * @return códiogo para o label do EndPoint
 	 */
-	private String getLabelCode() {
-		return getDescriptionCode() + ".label";
+	private String getLabelCode(final EndPoint endPoint) {
+		return getDescriptionCode(endPoint) + ".label";
 	}
 
 	/**
 	 * @return código para o grupo do EndPoint
 	 */
-	private String getGroupCode() {
-		return getDescriptionCode() + ".group";
+	private String getGroupCode(final EndPoint endPoint) {
+		return getDescriptionCode(endPoint) + ".group";
+	}
+
+	/**
+	 * @param error
+	 * @return error description
+	 */
+	private String getErrorDescription(final EndPoint endPoint, final Class<? extends Exception> error) {
+		String code = getDescriptionCode(endPoint) + ".$error." + error.getSimpleName() + ".description";
+		return getMessage(code, error.getSimpleName());
+	}
+
+	/**
+	 * @param error
+	 * @return label error
+	 */
+	private String getErrorLabel(final EndPoint endPoint, final Class<? extends Exception> error) {
+		String code = getDescriptionCode(endPoint) + ".$error." + error.getSimpleName() + ".label";
+		return getMessage(code, error.getName());
 	}
 }

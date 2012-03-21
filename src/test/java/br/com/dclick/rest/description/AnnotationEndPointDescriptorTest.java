@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import br.com.dclick.rest.description.annotations.EndPointDescription;
-import br.com.dclick.rest.description.annotations.EndPointParam;
+import br.com.dclick.rest.description.annotations.EndPointCode;
+import br.com.dclick.rest.description.annotations.Errors;
 
 /**
  * 
@@ -280,35 +280,8 @@ public class AnnotationEndPointDescriptorTest {
 
 	/***/
 	@Controller
-	static class EndPointWithDescription {
-		/***/
-		@EndPointDescription(group = "Test", label = "Method", description = "Description of this endPoint",
-				params = { @EndPointParam(name = "id", description = "id's description", values = {
-						"on", "off" }) })
-		@RequestMapping("/user/{id}/detail")
-		public void method(@PathVariable("id") final Long id) {
-
-		}
-	}
-
-	/**
-	 * 
-	 */
-	@Test
-	public void testGetEndPointsDescription() {
-		EndPoint endPoint = descriptor.describe(EndPointWithDescription.class).iterator().next();
-		assertEquals("EndPoint's description", "Description of this endPoint", endPoint.getDescriptions());
-		assertEquals("EndPoint's group", "Test", endPoint.getGroup());
-		assertEquals("EndPoint's label", "Method", endPoint.getLabel());
-		assertEquals("Parameter's description", "id's description", endPoint.getParams().get(0).getDescription());
-		assertEquals("Valid values", asList("on", "off"), endPoint.getParams().get(0).getValues());
-	}
-
-	/***/
-	@Controller
 	static class EndPointWithDescriptionI18N {
 		/***/
-		@EndPointDescription
 		@RequestMapping("/user/{id}/detail")
 		public void method(@PathVariable(value = "id") final Long id) {
 
@@ -321,20 +294,21 @@ public class AnnotationEndPointDescriptorTest {
 	@Test
 	public void testGetEndPointsDescriptionI18N() {
 		Locale.setDefault(Locale.ENGLISH);
+
 		EndPoint endPoint = descriptor.describe(EndPointWithDescriptionI18N.class).iterator().next();
-		assertEquals("EndPoint's description", "Description of this endPoint", endPoint.getDescriptions());
+		assertEquals("EndPoint's description", "Description of this endPoint", endPoint.getDescription());
 		assertEquals("EndPoint's label", "Method", endPoint.getLabel());
 		assertEquals("EndPoint's group", "Test", endPoint.getGroup());
 		assertEquals("Parameter's description", "id's description", endPoint.getParams().get(0).getDescription());
+		assertEquals("Parameter value", asList("1", "2"), endPoint.getParams().get(0).getValues());
 	}
 
 	/***/
 	@Controller
-	static class EndPointWithDescriptionI18NAndAnnotationDescription {
+	static class EndPointWithEndPointException {
 		/***/
-		@EndPointDescription(description = "Custom description",
-				params = @EndPointParam(name = "name", description = "description of parameter name"))
 		@RequestMapping("/url")
+		@Errors(RuntimeException.class)
 		public void method(@RequestParam("id") final long id, @RequestParam("name") final String name) {
 
 		}
@@ -345,16 +319,64 @@ public class AnnotationEndPointDescriptorTest {
 	 * 
 	 */
 	@Test
-	public void testGetEndPointsDescriptionI18NAndAnnotationDescription() {
+	public void testGetExceptionOfEndPoint() {
 		Locale.setDefault(Locale.ENGLISH);
 		EndPoint endPoint = descriptor
-				.describe(EndPointWithDescriptionI18NAndAnnotationDescription.class).iterator().next();
-		assertEquals("EndPoint's description", "Custom description", endPoint.getDescriptions());
-		assertEquals("EndPoint's label", "Method", endPoint.getLabel());
-		assertEquals("EndPoint's group", "Test", endPoint.getGroup());
-		assertEquals("Parameter's description", "id's description", endPoint.getParams().get(0).getDescription());
-		assertEquals("Parameter's description", "description of parameter name", endPoint.getParams().get(1)
-				.getDescription());
+				.describe(EndPointWithEndPointException.class).iterator().next();
+		EndPointError error = endPoint.getErrors().iterator().next();
+		assertEquals("Error label", "Runtime label", error.getLabel());
+		assertEquals("Error description", "Runtime description", error.getDescription());
+	}
+
+	/***/
+	@Controller
+	static class EndPointMethodCustomCode {
+		/***/
+		@RequestMapping("/url")
+		@EndPointCode("user.method")
+		public void method(@RequestParam("id") final long id, @RequestParam("name") final String name) {
+
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testEndPonintMethodeCustomCode() {
+		Locale.setDefault(Locale.ENGLISH);
+		EndPoint endPoint = descriptor
+				.describe(EndPointMethodCustomCode.class).iterator().next();
+		assertEquals("Description", "Custom code", endPoint.getDescription());
+		assertEquals("Label", "Custom code label", endPoint.getLabel());
+		assertEquals("Group", "Custom code group", endPoint.getGroup());
+	}
+
+	/***/
+	@Controller
+	@EndPointCode("sistem")
+	static class EndPointComposedCustomCode {
+		/***/
+		@RequestMapping("/url")
+		@EndPointCode("user.method")
+		public void method(@RequestParam("id") final long id, @RequestParam("name") final String name) {
+
+		}
+
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testEndPonintComposedCustomCode() {
+		Locale.setDefault(Locale.ENGLISH);
+		EndPoint endPoint = descriptor
+				.describe(EndPointComposedCustomCode.class).iterator().next();
+		assertEquals("Description", "Composed custom code", endPoint.getDescription());
+		assertEquals("Label", "Composed custom code label", endPoint.getLabel());
+		assertEquals("Group", "Composed custom code group", endPoint.getGroup());
 	}
 
 }

@@ -10,25 +10,13 @@ import java.lang.annotation.Target;
  * @author marcelofelix
  * 
  */
-
-@Target(ElementType.ANNOTATION_TYPE)
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface EndPointParam {
+public @interface Errors {
 
 	/**
-	 * Parameter name
+	 * errors
 	 */
-	String name() default "";
-
-	/**
-	 * Parameter description
-	 */
-	String description() default "";
-
-	/**
-	 * List of valid values
-	 */
-	String[] values() default {};
-
+	Class<? extends Exception>[] value() default {};
 }
