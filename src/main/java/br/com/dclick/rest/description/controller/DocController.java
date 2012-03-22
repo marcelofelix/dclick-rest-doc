@@ -1,7 +1,14 @@
 package br.com.dclick.rest.description.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import br.com.dclick.rest.description.Config;
 import br.com.dclick.rest.description.EndPoint;
 import br.com.dclick.rest.description.EndPointDescriptor;
+import br.com.dclick.rest.description.GlobalParam;
 
 /**
  * @author marcelofelix
@@ -25,6 +33,42 @@ public class DocController {
 
 	@Autowired
 	private EndPointDescriptor descriptor;
+
+	private List<GlobalParam> globalParams = new ArrayList<GlobalParam>();
+	private List<GlobalError> globalErrors = new ArrayList<GlobalError>();
+
+	@Autowired
+	private MessageSource messageSource;
+
+	/**
+	 * 
+	 */
+	@SuppressWarnings({ "unused", "unchecked" })
+	@PostConstruct
+	private void createGlobalParams() {
+		if (context.containsBean("globalParamsCode")) {
+			List<String> globalParamsCode = (List<String>) context.getBean("globalParamsCode");
+			for (String code : globalParamsCode) {
+				String name = messageSource.getMessage(code.concat(".").concat("name"), null, "", Locale.getDefault());
+				String value = messageSource
+						.getMessage(code.concat(".").concat("value"), null, "", Locale.getDefault());
+				String description = messageSource.getMessage(code.concat(".").concat("description"), null, "",
+						Locale.getDefault());
+				globalParams.add(new GlobalParam(name, value, description));
+			}
+		}
+		if (context.containsBean("globalErrorsCode")) {
+			List<String> globalErrorsCode = (List<String>) context.getBean("globalErrorsCode");
+			for (String code : globalErrorsCode) {
+				String label = messageSource
+						.getMessage(code.concat(".").concat("label"), null, "", Locale.getDefault());
+				String description = messageSource.getMessage(code.concat(".").concat("description"), null, "",
+						Locale.getDefault());
+				globalErrors.add(new GlobalError(label, description));
+			}
+		}
+
+	}
 
 	/**
 	 * @return configuração dos EndPoints
@@ -42,6 +86,8 @@ public class DocController {
 			}
 
 		}
+		config.setGlobalParams(globalParams);
+		config.setGlobalErrors(globalErrors);
 		return config;
 	}
 

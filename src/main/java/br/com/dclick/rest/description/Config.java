@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.dclick.rest.description.controller.GlobalError;
+
 /**
  * @author marcelofelix
  * 
@@ -19,7 +21,8 @@ public class Config implements Serializable {
 	private static final long serialVersionUID = 7364261242124040021L;
 	private String url;
 	private Map<String, Group> groups = new HashMap<String, Group>();
-	private List<Param> globlaParams = new ArrayList<Param>();
+	private List<GlobalParam> globalParams = new ArrayList<GlobalParam>();
+	private List<GlobalError> globalErrors = new ArrayList<GlobalError>();
 
 	/**
 	 * @param endPoint
@@ -70,16 +73,31 @@ public class Config implements Serializable {
 	/**
 	 * @return the globlaParams
 	 */
-	public List<Param> getGloblaParams() {
-		return globlaParams;
+	public List<GlobalParam> getGlobalParams() {
+		return globalParams;
 	}
 
 	/**
-	 * @param globlaParams
+	 * @param globalParams
 	 *            the globlaParams to set
 	 */
-	public void setGloblaParams(final List<Param> globlaParams) {
-		this.globlaParams = globlaParams;
+	public void setGlobalParams(final List<GlobalParam> globalParams) {
+		this.globalParams = globalParams;
+	}
+
+	/**
+	 * @return the globalErrors
+	 */
+	public List<GlobalError> getGlobalErrors() {
+		return globalErrors;
+	}
+
+	/**
+	 * @param globalErrors
+	 *            the globalErrors to set
+	 */
+	public void setGlobalErrors(final List<GlobalError> globalErrors) {
+		this.globalErrors = globalErrors;
 	}
 
 }
