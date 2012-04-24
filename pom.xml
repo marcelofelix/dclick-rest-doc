@@ -96,4 +96,14 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>sesc-release</id>
+			<url>http://192.168.16.28:8000/nexus/content/repositories/sesc-release</url>
+		</repository>
+		<snapshotRepository>
+			<id>sesc-snapshot</id>
+			<url>http://192.168.16.28:8000/nexus/content/repositories/sesc-snapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
