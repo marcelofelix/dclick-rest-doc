@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description.controller;
+package br.com.dclick.rest.doc.description.controller;
 
 /**
  * @author marcelofelix

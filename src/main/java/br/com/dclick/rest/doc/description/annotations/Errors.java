@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description.annotations;
+package br.com.dclick.rest.doc.description.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -10,13 +10,13 @@ import java.lang.annotation.Target;
  * @author marcelofelix
  * 
  */
-@Target({ ElementType.METHOD, ElementType.TYPE })
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface EndPointCode {
+public @interface Errors {
 
 	/**
-	 * code
+	 * errors
 	 */
-	String value() default "";
+	Class<? extends Exception>[] value() default {};
 }

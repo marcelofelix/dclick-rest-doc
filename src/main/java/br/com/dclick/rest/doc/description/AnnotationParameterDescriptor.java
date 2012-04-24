@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description;
+package br.com.dclick.rest.doc.description;
 
 import static java.util.Arrays.asList;
 

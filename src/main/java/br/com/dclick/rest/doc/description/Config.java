@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description;
+package br.com.dclick.rest.doc.description;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import br.com.dclick.rest.description.controller.GlobalError;
+import br.com.dclick.rest.doc.description.controller.GlobalError;
 
 /**
  * @author marcelofelix

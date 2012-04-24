@@ -25,8 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import br.com.dclick.rest.description.annotations.EndPointCode;
-import br.com.dclick.rest.description.annotations.Errors;
+import br.com.dclick.rest.doc.description.EndPoint;
+import br.com.dclick.rest.doc.description.EndPointDescriptor;
+import br.com.dclick.rest.doc.description.EndPointError;
+import br.com.dclick.rest.doc.description.Param;
+import br.com.dclick.rest.doc.description.annotations.EndPointCode;
+import br.com.dclick.rest.doc.description.annotations.Errors;
 
 /**
  * 

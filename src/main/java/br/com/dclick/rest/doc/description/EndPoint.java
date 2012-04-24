@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description;
+package br.com.dclick.rest.doc.description;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import br.com.dclick.rest.description.annotations.EndPointCode;
+import br.com.dclick.rest.doc.description.annotations.EndPointCode;
 
 /**
  * Descreve um serviço

@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description;
+package br.com.dclick.rest.doc.description;
 
 import java.io.Serializable;
 

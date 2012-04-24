@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description.controller;
+package br.com.dclick.rest.doc.description.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.dclick.rest.description.Config;
-import br.com.dclick.rest.description.EndPoint;
-import br.com.dclick.rest.description.EndPointDescriptor;
-import br.com.dclick.rest.description.GlobalParam;
+import br.com.dclick.rest.doc.description.Config;
+import br.com.dclick.rest.doc.description.EndPoint;
+import br.com.dclick.rest.doc.description.EndPointDescriptor;
+import br.com.dclick.rest.doc.description.GlobalParam;
 
 /**
  * @author marcelofelix

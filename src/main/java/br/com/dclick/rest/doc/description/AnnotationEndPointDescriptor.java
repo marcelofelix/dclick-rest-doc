@@ -1,4 +1,4 @@
-package br.com.dclick.rest.description;
+package br.com.dclick.rest.doc.description;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.util.UrlPathHelper;
 
-import br.com.dclick.rest.description.annotations.Errors;
+import br.com.dclick.rest.doc.description.annotations.Errors;
 
 /**
  * Essa classe faz a identificação de EndPoint utilizando as annotations do
