@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * Descrição de um parametro do EndPoint
  * 
@@ -89,6 +91,7 @@ public class Param implements Comparable<Param>, Serializable {
 	/**
 	 * @return the values
 	 */
+	@JsonProperty("value")
 	public List<String> getValues() {
 		return values;
 	}

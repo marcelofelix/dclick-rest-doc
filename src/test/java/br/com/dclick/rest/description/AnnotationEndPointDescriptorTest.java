@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.dclick.rest.doc.description.EndPoint;
@@ -118,21 +117,6 @@ public class AnnotationEndPointDescriptorTest {
 		@RequestMapping(value = "/login", method = { GET, POST })
 		public void method() {
 		};
-
-	}
-
-	/**
-	 * Testa EndPoint com multiplas urls
-	 * */
-	@Test
-	public void testUrlOfControllerAndMethosAnnotated() {
-		Collection<String> urls = asList("/user/login", "/usr/login");
-		Collection<RequestMethod> methods = asList(GET, POST);
-
-		for (EndPoint s : descriptor.describe(EndPointWithMultipleUrls.class)) {
-			assertTrue("Urls esperadas: " + urls, urls.containsAll(s.getUrls()));
-			assertTrue("Metodos esperados: " + methods, methods.containsAll(s.getMethods()));
-		}
 
 	}
 

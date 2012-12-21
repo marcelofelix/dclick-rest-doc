@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,7 @@ import org.springframework.stereotype.Component;
 public class I18NDocumentResolver implements DocumentResolver {
 
 	@Autowired
-	private MessageSource message;
+	private ApplicationContext message;
 
 	@Override
 	public void document(final EndPoint endPoint) {

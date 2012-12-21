@@ -3,6 +3,8 @@ package br.com.dclick.rest.doc.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * @author marcelofelix
  * 
@@ -30,6 +32,7 @@ public class Group {
 	/**
 	 * @return EndPoints
 	 */
+	@JsonProperty("endpoints")
 	public List<EndPoint> getEndPoints() {
 		return endPoints;
 	}

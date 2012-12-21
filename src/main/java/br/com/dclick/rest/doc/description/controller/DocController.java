@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,9 +36,6 @@ public class DocController {
 	private List<GlobalParam> globalParams = new ArrayList<GlobalParam>();
 	private List<GlobalError> globalErrors = new ArrayList<GlobalError>();
 
-	@Autowired
-	private MessageSource messageSource;
-
 	/**
 	 * 
 	 */
@@ -49,10 +45,10 @@ public class DocController {
 		if (context.containsBean("globalParamsCode")) {
 			List<String> globalParamsCode = (List<String>) context.getBean("globalParamsCode");
 			for (String code : globalParamsCode) {
-				String name = messageSource.getMessage(code.concat(".").concat("name"), null, "", Locale.getDefault());
-				String value = messageSource
+				String name = context.getMessage(code.concat(".").concat("name"), null, "", Locale.getDefault());
+				String value = context
 						.getMessage(code.concat(".").concat("value"), null, "", Locale.getDefault());
-				String description = messageSource.getMessage(code.concat(".").concat("description"), null, "",
+				String description = context.getMessage(code.concat(".").concat("description"), null, "",
 						Locale.getDefault());
 				globalParams.add(new GlobalParam(name, value, description));
 			}
@@ -60,9 +56,9 @@ public class DocController {
 		if (context.containsBean("globalErrorsCode")) {
 			List<String> globalErrorsCode = (List<String>) context.getBean("globalErrorsCode");
 			for (String code : globalErrorsCode) {
-				String label = messageSource
+				String label = context
 						.getMessage(code.concat(".").concat("label"), null, "", Locale.getDefault());
-				String description = messageSource.getMessage(code.concat(".").concat("description"), null, "",
+				String description = context.getMessage(code.concat(".").concat("description"), null, "",
 						Locale.getDefault());
 				globalErrors.add(new GlobalError(label, description));
 			}

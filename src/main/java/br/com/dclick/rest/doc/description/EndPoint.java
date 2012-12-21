@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -46,8 +47,13 @@ public class EndPoint implements Serializable {
 	/**
 	 * @return Lista de methods do EndPoint (GET, POST, DELETE, PUT)
 	 */
-	public List<RequestMethod> getMethods() {
-		return Collections.unmodifiableList(methods);
+	@JsonProperty("method")
+	public RequestMethod getRequestMethod() {
+		if (this.methods.isEmpty()) {
+			return RequestMethod.GET;
+		} else {
+			return this.methods.iterator().next();
+		}
 	}
 
 	/**
