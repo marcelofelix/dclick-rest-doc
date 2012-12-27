@@ -288,7 +288,6 @@ public class AnnotationEndPointDescriptorTest {
 		assertEquals("EndPoint's label", "Method", endPoint.getLabel());
 		assertEquals("EndPoint's group", "Test", endPoint.getGroup());
 		assertEquals("Parameter's description", "id's description", endPoint.getParams().get(0).getDescription());
-		assertEquals("Parameter value", asList("1", "2"), endPoint.getParams().get(0).getValues());
 	}
 
 	/***/
