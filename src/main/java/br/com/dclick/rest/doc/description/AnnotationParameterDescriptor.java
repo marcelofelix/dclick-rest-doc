@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import static br.com.dclick.rest.doc.description.ParameterValueDescriptorFactory.getParameterValue;
 
 /**
  * Identifica os parametros dos EndPoints olhando as annotations existentes
@@ -42,11 +43,16 @@ public class AnnotationParameterDescriptor implements ParamDescriptor {
 	 */
 	private List<Param> getRequestParam(final Method method) {
 		List<Param> parameters = new ArrayList<Param>();
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		int index = 0;
 		for (Annotation[] p : method.getParameterAnnotations()) {
+			Class<?> parameterType = parameterTypes[index++];
 			for (Annotation a : p) {
 				if (a instanceof RequestParam) {
-					RequestParam param = (RequestParam) a;
-					parameters.add(new Param(param.value(), param.required()));
+					RequestParam requestParam = (RequestParam) a;
+					Param param = new Param(requestParam.value(), requestParam.required());
+					parameters.add(param);
+					param.setValues(getParameterValue(parameterType));
 				}
 			}
 		}
@@ -59,11 +65,16 @@ public class AnnotationParameterDescriptor implements ParamDescriptor {
 	 */
 	private List<Param> getPathVariable(final Method method) {
 		List<Param> parameters = new ArrayList<Param>();
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		int index = 0;
 		for (Annotation[] p : method.getParameterAnnotations()) {
+			Class<?> parameterType = parameterTypes[index++];
 			for (Annotation a : p) {
 				if (a instanceof PathVariable) {
 					PathVariable pathVariable = (PathVariable) a;
-					parameters.add(new Param(pathVariable.value(), true, true));
+					Param param = new Param(pathVariable.value(), true, true);
+					parameters.add(param);
+					param.setValues(getParameterValue(parameterType));
 				}
 			}
 		}
@@ -83,7 +94,9 @@ public class AnnotationParameterDescriptor implements ParamDescriptor {
 				if (a instanceof ModelAttribute) {
 					for (PropertyDescriptor pd : BeanUtils.getPropertyDescriptors(parameterType)) {
 						if (!pd.getName().equalsIgnoreCase("class")) {
-							parameters.add(new Param(pd.getName(), false));
+							Param param = new Param(pd.getName(), false);
+							parameters.add(param);
+							param.setValues(getParameterValue(pd.getPropertyType()));
 						}
 					}
 				}

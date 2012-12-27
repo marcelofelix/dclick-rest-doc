@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,7 +46,6 @@ public class I18NDocumentResolver implements DocumentResolver {
 		endPoint.setLabel(getLabel(endPoint));
 		for (Param p : endPoint.getParams()) {
 			p.setDescription(getParameterDescription(endPoint, p.getName()));
-			p.setValues(getParameterValues(endPoint, p.getName()));
 		}
 		for (EndPointError e : endPoint.getErrors()) {
 			e.setLabel(getErrorLabel(endPoint, e.getError()));

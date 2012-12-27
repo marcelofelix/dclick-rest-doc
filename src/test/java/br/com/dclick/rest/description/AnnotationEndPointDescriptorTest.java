@@ -367,4 +367,38 @@ public class AnnotationEndPointDescriptorTest {
 		assertEquals("Group", "Composed custom code group", endPoint.getGroup());
 	}
 
+	@Controller
+	static class EndPointWithParameterAsBoolean {
+		@RequestMapping("/booleanParameter")
+		public void method(@RequestParam("active") boolean active) {
+		}
+	}
+
+	@Test
+	public void testEndPointWithParameterAsBoolean() {
+		Locale.setDefault(Locale.ENGLISH);
+		EndPoint endPoint = descriptor.describe(EndPointWithParameterAsBoolean.class).iterator().next();
+		Param param = endPoint.getParams().iterator().next();
+		assertEquals(asList("FALSE", "TRUE"), param.getValues());
+	}
+
+	public enum Color {
+		BLACK, BLUE, GREEN
+	}
+
+	@Controller
+	static class EndPointWithEnumParameter {
+		@RequestMapping("/booleanParameter")
+		public void method(@RequestParam("color") Color color) {
+		}
+	}
+
+	@Test
+	public void testEndPointWithEnumParameter() {
+		Locale.setDefault(Locale.ENGLISH);
+		EndPoint endPoint = descriptor.describe(EndPointWithEnumParameter.class).iterator().next();
+		Param param = endPoint.getParams().iterator().next();
+		assertEquals(asList("BLACK", "BLUE", "GREEN"), param.getValues());
+	}
+
 }
