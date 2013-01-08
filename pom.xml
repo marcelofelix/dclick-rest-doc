@@ -15,7 +15,9 @@
 		<targetJdk>1.6</targetJdk>
 		<jackson-mapper-asl.version>1.9.8</jackson-mapper-asl.version>
 	</properties>
-
+	<scm>
+		<connection>scm:git:git@github.com:marcelofelix/dclick-rest-doc.git</connection>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
