@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 /**
  * Descrição de um parametro do EndPoint
@@ -92,6 +94,7 @@ public class Param implements Comparable<Param>, Serializable {
 	 * @return the values
 	 */
 	@JsonProperty("value")
+	@JsonSerialize(include = Inclusion.NON_EMPTY)
 	public List<String> getValues() {
 		return values;
 	}

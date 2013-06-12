@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -190,6 +192,57 @@ public class AnnotationEndPointDescriptorTest {
 
 		EndPoint endPoint = descriptor.describe(EndPointWithModelAtributeAsParam.class).iterator()
 				.next();
+		assertEquals("Amount of request parameter", 2, endPoint.getParams().size());
+		assertEquals("Parameters", expectedParameters, endPoint.getParams());
+	}
+
+	/***/
+	@Controller
+	static class EndPointWithRequestBodyAsParam {
+		/***/
+		static class User {
+			private String name;
+			private int age;
+			
+			/** @return String */
+			public String getName() {
+				return name;
+			}
+			
+			/***/
+			public void setName(final String name) {
+				this.name = name;
+			}
+			
+			/** @return int */
+			public int getAge() {
+				return age;
+			}
+			
+			/***/
+			public void setAge(final int age) {
+				this.age = age;
+			}
+			
+		}
+		
+		/***/
+		@RequestMapping
+		public void method(@RequestBody final User user) {
+		};
+	}
+	
+	/**
+	 * Testa quantidade de parametros anotados com @ModelAtribute
+	 */
+	@Test
+	@Ignore
+	public void testRecognizeRequestBodyParameterFromEndPoint() {
+		List<Param> expectedParameters = new ArrayList<Param>();
+		expectedParameters.add(new Param("age", false));
+		expectedParameters.add(new Param("name", false));
+		
+		EndPoint endPoint = descriptor.describe(EndPointWithRequestBodyAsParam.class).iterator().next();
 		assertEquals("Amount of request parameter", 2, endPoint.getParams().size());
 		assertEquals("Parameters", expectedParameters, endPoint.getParams());
 	}

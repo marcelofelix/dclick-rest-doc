@@ -39,7 +39,7 @@ public class DocController {
 	/**
 	 * 
 	 */
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings({ "unchecked" })
 	@PostConstruct
 	private void createGlobalParams() {
 		if (context.containsBean("globalParamsCode")) {

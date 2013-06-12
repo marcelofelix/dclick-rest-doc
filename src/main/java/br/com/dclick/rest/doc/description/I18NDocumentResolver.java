@@ -86,6 +86,7 @@ public class I18NDocumentResolver implements DocumentResolver {
 	 * @param parameterName
 	 * @return parameter values
 	 */
+	@SuppressWarnings("unused")
 	private List<String> getParameterValues(final EndPoint endPoint, final String parameterName) {
 		String value = getMessage(getDescriptionCode(endPoint) + ".$parameter." + parameterName + ".value");
 		List<String> values = new ArrayList<String>();
